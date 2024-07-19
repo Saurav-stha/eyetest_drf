@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+
+{% block title %}Upload Test Image{% endblock title %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="card-title text-center">Upload Test Image</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Upload</button>
+                        </div>
+                    </form>
+
+                    {% if img_obj %}
+                    <div class="mt-4 text-center">
+                        <h5>Successfully uploaded: {{ img_obj.name }}</h5>
+                        <img src="{{ img_obj.imgSrc.url }}" alt="Uploaded Image" class="img-fluid" style="max-height: 300px;">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

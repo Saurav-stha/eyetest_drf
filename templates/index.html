@@ -1,0 +1,228 @@
+{% extends "main.html" %}
+{% block title %}Eye Test{% endblock title %}
+
+{% block style %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .top-left-quarter img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .buttons-container {
+        gap: 10px;
+    }
+
+    .buttons-container button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: brown;
+        color: white;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .buttons-container button:hover {
+        background-color: #0056b3;
+    }
+
+    .info-container input {
+        width: 100%;
+        border: none;
+        background-color: transparent;
+        box-shadow: none;
+        font-family: inherit;
+        padding: 0;
+        margin: 0;
+    }
+
+    .next-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .next-button:hover {
+        background-color: #218838;
+    }
+
+    .card-custom {
+        background-color: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body-custom {
+        padding: 20px;
+    }
+
+    .form-label-custom {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-6 top-left-quarter">
+            {% if random_number %}
+                <img src="{{ MEDIA_URL }}images/{{random_number}}.webp" alt="Random Image" class="img-fluid">
+            {% else %}
+                <p>No image found</p>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <div class="buttons-container d-flex flex-wrap mt-4">
+                {% for i in range %}
+                    <button class="btn btn-primary btn-click-me mb-2 me-2" id="btn-{{i}}">{{ i }}</button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card card-custom">
+                <div class="card-body card-body-custom">
+                    <div class="row">
+                        <div class="col-md-4 mb-3 d-flex align-items-center">
+                            <label for="chosen-btn" class="form-label form-label-custom">Chosen:</label>
+                            <input id="chosen-btn" class="form-control" placeholder="choose a number..." readonly>
+                        </div>
+                        <div class="col-md-4 mb-3 d-flex align-items-center">
+                            <label for="result-area" class="form-label form-label-custom">Correct:</label>
+                            <input id="result-area" class="form-control" value="0" readonly>
+                        </div>
+                        <div class="col-md-4 mb-3 d-flex align-items-center">
+                            <label for="total-guess" class="form-label form-label-custom">Guess:</label>
+                            <input id="total-guess" class="form-control" value="0" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button class="next-button" id="next-button">Next</button>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let gotScore = parseInt(localStorage.getItem('score')) || 0;
+        let totalScore = parseInt(localStorage.getItem('totalCount')) || 0;
+
+        if (totalScore > 13) {
+            location.href = "{% url 'result-file' %}";
+        }
+
+        document.getElementById('result-area').value = `${gotScore}`;
+        document.getElementById('total-guess').value = `${totalScore}`;
+    });
+
+    document.querySelectorAll('.btn-click-me').forEach(button => {
+        button.addEventListener('click', function() {
+            let chosenBtn = button.textContent.trim();
+            document.getElementById('chosen-btn').value = chosenBtn;
+
+            let random_number = {{random_number}};
+            let gotScore = parseInt(localStorage.getItem('score')) || 0;
+            let totalScore = parseInt(localStorage.getItem('totalCount')) || 0;
+
+            totalScore++;
+
+            if (parseInt(chosenBtn) === random_number) {
+                gotScore++;
+            }
+
+            document.getElementById('result-area').value = `${gotScore}`;
+            document.getElementById('total-guess').value = `${totalScore}`;
+
+            localStorage.setItem('score', gotScore);
+            localStorage.setItem('totalCount', totalScore);
+
+            location.reload();
+        });
+    });
+
+    document.getElementById('next-button').addEventListener('click', function() {
+        location.reload();
+    });
+</script>
+{% endblock content %}
+
+
+<!-- <script>
+    var gotScore,totalScore
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+        var gotScore = localStorage.getItem('score')
+        var totalScore = localStorage.getItem('totalCount')
+
+        if (gotScore == null || totalScore == null){
+            gotScore = 0
+            totalScore = 0
+        }
+
+        //console.log(gotScore)
+        document.getElementById('result-area').value = gotScore + "/" +totalScore
+    })
+    
+    
+    totalCount = 0
+    prevData = 0
+    document.querySelectorAll('.btn-click-me').forEach(button => {
+        button.addEventListener('click', function() {
+            // Log the clicked button's text content to the console
+            chosenBtn = button.textContent.trim();
+            console.log('Clicked button:', button.textContent.trim());
+            document.getElementById('chosen-btn').value = chosenBtn
+            
+            totalCount++
+            random_number = {{random_number}}
+            //console.log(random_number)
+            if (random_number == chosenBtn){
+            //console.log(true)
+            prevData = parseInt(document.getElementById('result-area').value)
+            prevData++
+            //console.log(prevData)
+            
+            }
+            document.getElementById('result-area').value = prevData + "/" + totalCount;
+
+        //   url="/save-data/"
+        //   fetch(url,{
+
+        //   })
+
+            //location.reload()
+
+
+            localStorage.setItem()
+        });
+    });
+    
+
+    
+    {% comment %} console.log(document.querySelector('#result-area')) {% endcomment %}
+</script> -->
+

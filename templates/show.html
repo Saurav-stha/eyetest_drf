@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+
+{% block title %}ALL IMAGES{% endblock title %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="row">
+                {% for i in range %}
+                <div class="col-md-4 mb-4 text-center">
+                    <img src="{{ MEDIA_URL }}images/{{ i }}.webp" alt="{{ i }} image" class="img-fluid mb-2">
+                    <button class="btn btn-primary btn-click-me" id="btn-{{ i }}">{{ i }}</button>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+        
+{% endblock content %}

@@ -40,9 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # added apps
-    'base',
-    'crispy_forms',
-    'crispy_bootstrap5',
 
     'api',
     'rest_framework',
@@ -54,10 +51,6 @@ INSTALLED_APPS = [
 
 
 AUTH_USER_MODEL = 'api.User'
-
-CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
-
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

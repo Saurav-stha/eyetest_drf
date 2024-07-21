@@ -3,12 +3,16 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     
-    username = models.CharField(max_length=200, null=True)
+    username = models.CharField(max_length=200, null=True, unique=True)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255, null=False)
 
     # avatar = models.ImageField(null=True, default="avatar.svg")
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    # USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['email']
+
+    def __str__(self):
+        return self.username
+
 
